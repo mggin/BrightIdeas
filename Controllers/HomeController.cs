@@ -113,10 +113,13 @@ namespace BrightIdeas.Controllers {
                 var total = 0;
                 User user = resource.GetUserData(userId);
                 System.Console.WriteLine(user.CreatedIdeas.Count);
-                foreach (var idea in user.CreatedIdeas) {
-                    System.Console.WriteLine(idea.Content);
-                    total += resource.GetIdeaData(idea.IdeaId).UsersWhoLiked.Count;
+                var ideas = resource.GetIdeas();
+                foreach (var idea in ideas) {
+                    if (idea.Creator.UserId == userId) {
+                        total += idea.UsersWhoLiked.Count;
+                    }
                 }
+                
 
                 ViewBag.total = total;
                 return View(user);
