@@ -1,0 +1,11 @@
+@model User
+
+<partial name="NavBarPartial"/>
+<main>
+    <p>Name: @Model.Name</p>
+    <p>Alias: @Model.Alias</p>
+    <p>Email: @Model.Email</p>
+    <hr>
+    <p>Total Number of Post: @Model.CreatedIdeas.Count</p>
+    <p>Total Number of Likes: @Model.LikedIdeas.Count</p>
+</main>

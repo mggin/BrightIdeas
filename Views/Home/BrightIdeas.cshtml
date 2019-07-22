@@ -1,0 +1,43 @@
+
+@model DataModel
+
+<style>
+    textarea.form-control {
+        width: 400px;
+        height: 100px;
+    }
+    ::placeholder {
+        font-size: 14px;
+    }
+</style>
+
+<partial name="NavBarPartial"/>
+<main>
+    <h6>Hi @Model.User.Name</h6>
+    <form asp-action="CreateIdea" asp-controller="Home" method="POST">
+        <textarea class="form-control" asp-for="Idea.Content" placeholder="Post something here ..."></textarea>
+        <button type="submit" class="btn btn-info mt-2" style="font-size: 13px;">Add Idea!</button>
+    </form>
+    @foreach (var Idea in Model.Ideas) {
+        <div class="row mt-5 col-12">
+            <div class="row col-2">
+                <a href="/users/@Idea.Creator.UserId" class="m-2 small">@Idea.Creator.Name</a>
+                <p class="m-2 small">says:</p>
+            </div>
+            <div class="col-10">
+                <p class="col">
+                    @Idea.Content
+                </p>
+                <div class="col-12 row ml-1">
+                    
+                        <a href="/users/@Idea.IdeaId/add_idea" class="small mr-3">Like</a>
+                  
+                    <a href="/bright_ideas/@Idea.IdeaId" class="small">@Idea.UsersWhoLiked.Count people</a> <span class="small ml-2">  like this.</span>
+                </div>
+                @if (Model.User.CreatedIdeas.Contains(Idea)) {
+                    <a href="/bright_ideas/@Idea.IdeaId/delete" class="small text-danger col-12 ml-1">Delete</a>
+                }
+            </div>
+        </div>
+    }
+</main>

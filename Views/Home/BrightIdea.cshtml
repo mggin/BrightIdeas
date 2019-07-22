@@ -1,0 +1,29 @@
+@model Idea
+<partial name="NavBarPartial"/>
+<main>
+    <div class="row jumbotron p-3">
+        <div class="ml-3">
+            <a href="#" >@Model.Creator.Name</a>
+            <span>says: </span>
+        </div>
+        <p class="ml-3 p-0 m-0">@Model.Content</p>
+    </div>
+    <p>People Who Liked this Post:</p>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Alias</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Associate in Model.UsersWhoLiked) {
+                <tr>
+                    <td><a href="/users/@Associate.User.UserId">@Associate.User.Alias</a></td>
+                    <td>@Associate.User.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+</main>

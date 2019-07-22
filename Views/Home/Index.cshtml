@@ -1,0 +1,41 @@
+﻿
+@model DataModel
+<main class="row">
+    <div class="col">
+        <form asp-action="Register" asp-controller="Home" method="POST">
+            <h4>Register</h4>
+            <label class="small">Name</label>
+            <span class="d-block small text-danger" asp-validation-for="User.Name"></span>
+            <input class="form-control" asp-for="User.Name">
+            <label class="small">Alias</label>
+            <span class="d-block small text-danger" asp-validation-for="User.Alias"></span>
+            <input class="form-control" asp-for="User.Alias">
+            <label class="small">Email Address</label>
+            <span class="d-block small text-danger" asp-validation-for="User.Email"></span>
+            <input class="form-control" asp-for="User.Email">
+            <label class="small">Password</label>
+            <span class="d-block small text-danger" asp-validation-for="User.Password"></span>
+            <input class="form-control" asp-for="User.Password">
+            <label class="small">Confirm Password</label>
+            <span class="d-block small text-danger" asp-validation-for="User.Confirm"></span>
+            <input class="form-control" asp-for="User.Confirm">
+            <div class="row justify-content-center mt-3">
+                <button type="submit" class="btn btn-info">Register</button>
+            </div>
+        </form>
+    </div>
+    <div class="col">
+        <form asp-action="Login" asp-controller="Home" method="POST">
+            <h4>Login</h4>
+            <label class="small">Email Address</label>
+            <span class="d-block small text-danger" asp-validation-for="LoginInfo.LEmail"></span>
+            <input class="form-control" asp-for="LoginInfo.LEmail">
+            <label class="small">Password</label>
+            <span class="d-block small text-danger" asp-validation-for="LoginInfo.LPassword"></span>
+            <input class="form-control" asp-for="LoginInfo.LPassword">
+            <div class="row justify-content-center mt-3">
+                <button type="submit" class="btn btn-info">Login</button>
+            </div>
+        </form>
+    </div>
+</main>
