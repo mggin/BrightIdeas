@@ -39,7 +39,8 @@ namespace BrightIdeas.Controllers {
             if (ModelState.IsValid) {
                 PasswordHasher<User> Hasher = new PasswordHasher<User> ();
                 user.Password = Hasher.HashPassword (user, user.Password);
-                resource.Add(user);
+                resource.dbContext.Add(user);
+                resource.dbContext.SaveChanges();
                 HttpContext.Session.SetInt32("userId", user.UserId);
                 HttpContext.Session.SetString("login", "true");
                 return RedirectToAction ("BrightIdeas");
@@ -95,7 +96,8 @@ namespace BrightIdeas.Controllers {
                 int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
                 Idea newIdea = Data.Idea;
                 newIdea.UserId = currentUserId;
-                resource.Add(newIdea);
+                resource.dbContext.Add(newIdea);
+                resource.dbContext.SaveChanges();
                 return RedirectToAction("BrightIdeas");
             } else {
                 return Content("Access Denied");
@@ -108,8 +110,14 @@ namespace BrightIdeas.Controllers {
         public IActionResult Users(int userId) {
             string key = HttpContext.Session.GetString("login");
             if (!string.IsNullOrEmpty(key)) {
+                var total = 0;
                 User user = resource.GetUserData(userId);
-                int total = resource.GetUserData(userId).CreatedIdeas.Sum(i => i.UsersWhoLiked.Count + 1);
+                System.Console.WriteLine(user.CreatedIdeas.Count);
+                foreach (var idea in user.CreatedIdeas) {
+                    System.Console.WriteLine(idea.Content);
+                    total += resource.GetIdeaData(idea.IdeaId).UsersWhoLiked.Count;
+                }
+
                 ViewBag.total = total;
                 return View(user);
             } else {
@@ -158,7 +166,8 @@ namespace BrightIdeas.Controllers {
                         UserId = currentUserId,
                         IdeaId = ideaId
                     };
-                    resource.Add(newAssociation);
+                    resource.dbContext.Add(newAssociation);
+                    resource.dbContext.SaveChanges();
                 }
                 return RedirectToAction("BrightIdeas");
             } else {
