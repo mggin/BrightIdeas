@@ -13,8 +13,10 @@ namespace BrightIdeas.Controllers {
     public class HomeController : Controller {
 
         private Resource resource;
+
         public HomeController(Context context) {
             resource = new Resource(context);
+          
         }
 
         [Route ("")]
@@ -110,16 +112,9 @@ namespace BrightIdeas.Controllers {
         public IActionResult Users(int userId) {
             string key = HttpContext.Session.GetString("login");
             if (!string.IsNullOrEmpty(key)) {
-                var total = 0;
-                User user = resource.GetUserData(userId);
-                System.Console.WriteLine(user.CreatedIdeas.Count);
-                var ideas = resource.GetIdeas();
-                foreach (var idea in ideas) {
-                    if (idea.Creator.UserId == userId) {
-                        total += idea.UsersWhoLiked.Count;
-                    }
-                }
-                
+                int total = resource.GetIdeas().Where(i => i.Creator.UserId == userId).Sum(i => i.UsersWhoLiked.Count);
+                User user = resource.GetUserData(userId);  
+                System.Console.WriteLine(total);
 
                 ViewBag.total = total;
                 return View(user);
