@@ -24,6 +24,7 @@ namespace BrightIdeas.Models {
         public string Password { get; set; }
         [Required(ErrorMessage = "*** Required ***")]
         [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Password didn't match")]
         [NotMapped]
         public string Confirm { get; set; }
         public List<Association> LikedIdeas { get; set; }

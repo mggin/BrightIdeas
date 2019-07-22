@@ -74,62 +74,95 @@ namespace BrightIdeas.Controllers {
 
         [HttpGet("bright_ideas")]
         public IActionResult BrightIdeas() {
-            int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
-            DataModel Data = new DataModel() {
-                Ideas = resource.GetIdeas(),
-                User = resource.GetUserData(currentUserId),
+            string key = HttpContext.Session.GetString("login");
+            if (!string.IsNullOrEmpty(key)) {
+                int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
+                DataModel Data = new DataModel() {
+                    Ideas = resource.GetIdeas(),
+                    User = resource.GetUserData(currentUserId),
 
-            };
-            return View(Data);
+                };
+                return View(Data);
+            } else {
+                return Content("Access Denied");
+            }
         }
 
         [HttpPost("idea/create")]
         public IActionResult CreateIdea(DataModel Data) {
-            int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
-            Idea newIdea = Data.Idea;
-            newIdea.UserId = currentUserId;
-            resource.Add(newIdea);
-            return RedirectToAction("BrightIdeas");
+            string key = HttpContext.Session.GetString("login");
+            if (!string.IsNullOrEmpty(key)) {
+                int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
+                Idea newIdea = Data.Idea;
+                newIdea.UserId = currentUserId;
+                resource.Add(newIdea);
+                return RedirectToAction("BrightIdeas");
+            } else {
+                return Content("Access Denied");
+            }
+
         }
 
 
         [HttpGet("users/{userId}")]
         public IActionResult Users(int userId) {
-            User user = resource.GetUserData(userId);
-            return View(user);
+            string key = HttpContext.Session.GetString("login");
+            if (!string.IsNullOrEmpty(key)) {
+                User user = resource.GetUserData(userId);
+                return View(user);
+            } else {
+                return Content("Access Denied");
+            }
         }
 
         [HttpGet("bright_ideas/{ideaId}")]
         public IActionResult BrightIdea(int ideaId) {
-            Idea idea = resource.GetIdeaData(ideaId);
-            return View(idea);
+            string key = HttpContext.Session.GetString("login");
+            if (!string.IsNullOrEmpty(key)) {
+                Idea idea = resource.GetIdeaData(ideaId);
+                return View(idea);
+            } else {
+                return Content("Access Denied");
+            }
         }
 
         [HttpGet("bright_ideas/{ideaId}/delete")]
         public IActionResult DeleteIdea(int ideaId) {
-            Idea idea = resource.GetIdeaData(ideaId);
-            resource.Remove(idea);
-            return RedirectToAction("BrightIdeas");
+            string key = HttpContext.Session.GetString("login");
+            if (!string.IsNullOrEmpty(key)) {
+                Idea idea = resource.GetIdeaData(ideaId);
+                resource.Remove(idea);
+                return RedirectToAction("BrightIdeas");
+            } else {
+                return Content("Access Denied");
+            }
         }
 
         [HttpGet("users/{ideaId}/add_idea")]
         public IActionResult AddIdea(int ideaId) {
-            int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
-            var ideaExist = resource
-            .GetUserData(currentUserId)
-            .LikedIdeas
-            .Any(_idea => _idea.IdeaId == ideaId);
 
-            if (ideaExist) {
-                // ModelState.AddModelError ("Idea", "Only single like is permitted.");
+            string key = HttpContext.Session.GetString("login");
+            if (!string.IsNullOrEmpty(key)) {
+                int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
+                var ideaExist = resource
+                .GetUserData(currentUserId)
+                .LikedIdeas
+                .Any(_idea => _idea.IdeaId == ideaId);
+
+                if (ideaExist) {
+                    // ModelState.AddModelError ("Idea", "Only single like is permitted.");
+                } else {
+                    Association newAssociation = new Association() {
+                        UserId = currentUserId,
+                        IdeaId = ideaId
+                    };
+                    resource.Add(newAssociation);
+                }
+                return RedirectToAction("BrightIdeas");
             } else {
-                Association newAssociation = new Association() {
-                    UserId = currentUserId,
-                    IdeaId = ideaId
-                };
-                resource.Add(newAssociation);
+                return Content("Access Denied");
             }
-            return RedirectToAction("BrightIdeas");
+            
         }
 
     }
