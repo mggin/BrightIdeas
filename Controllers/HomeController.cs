@@ -109,6 +109,8 @@ namespace BrightIdeas.Controllers {
             string key = HttpContext.Session.GetString("login");
             if (!string.IsNullOrEmpty(key)) {
                 User user = resource.GetUserData(userId);
+                int total = resource.GetUserData(userId).CreatedIdeas.Sum(i => i.UsersWhoLiked.Count + 1);
+                ViewBag.total = total;
                 return View(user);
             } else {
                 return Content("Access Denied");
