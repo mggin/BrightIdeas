@@ -10,7 +10,7 @@ namespace BrightIdeas.Models {
         public int UserId { get; set; }
 
         [Required(ErrorMessage = "*** Required ***")]
-        [MinLength(5)]
+        [MinLength(5, ErrorMessage = "Ideas should be at least 5 characters.")]
         public string Content { get; set; }
         public User Creator { get; set; }
         public List<Association> UsersWhoLiked { get; set; }

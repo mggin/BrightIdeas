@@ -95,12 +95,22 @@ namespace BrightIdeas.Controllers {
         public IActionResult CreateIdea(DataModel Data) {
             string key = HttpContext.Session.GetString("login");
             if (!string.IsNullOrEmpty(key)) {
-                int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
-                Idea newIdea = Data.Idea;
-                newIdea.UserId = currentUserId;
-                resource.dbContext.Add(newIdea);
-                resource.dbContext.SaveChanges();
-                return RedirectToAction("BrightIdeas");
+                if (ModelState.IsValid) {
+                    int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
+                    Idea newIdea = Data.Idea;
+                    newIdea.UserId = currentUserId;
+                    resource.dbContext.Add(newIdea);
+                    resource.dbContext.SaveChanges();
+                    return RedirectToAction("BrightIdeas");
+                } else {
+                    int currentUserId = (int)  HttpContext.Session.GetInt32("userId");
+                    DataModel data = new DataModel() {
+                        Ideas = resource.GetIdeas(),
+                        User = resource.GetUserData(currentUserId),
+                    };
+                
+                    return View("BrightIdeas", data);
+                }
             } else {
                 return Content("Access Denied");
             }

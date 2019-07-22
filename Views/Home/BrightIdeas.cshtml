@@ -15,6 +15,7 @@
 <main>
     <h6>Hi @Model.User.Name</h6>
     <form asp-action="CreateIdea" asp-controller="Home" method="POST">
+        <span asp-validation-for="Idea.Content" class="small text-danger"></span>
         <textarea class="form-control" asp-for="Idea.Content" placeholder="Post something here ..."></textarea>
         <button type="submit" class="btn btn-info mt-2" style="font-size: 13px;">Add Idea!</button>
     </form>
